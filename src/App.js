@@ -1,15 +1,18 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import './App.css';
 import uuid from 'uuid/v4'
 
-import {Text} from './components/Text'
-import {ToDoInput} from './components/ToDoInput'
-import {ToDoItem} from './components/ToDoItem'
+import { Text } from './components/Text'
+import { ToDoInput } from './components/ToDoInput'
+import { ToDoItem } from './components/ToDoItem'
+import { todosReducer, initialState } from './helpers/todosReducer'
+
 
 function App() {
-  const todosFromStorage = localStorage.getItem('todos')
-  const todosParsed = JSON.parse(todosFromStorage)
-  const [todos, setTodos] = useState(todosParsed || [])
+  // const todosFromStorage = localStorage.getItem('todos')
+  // const todosParsed = JSON.parse(todosFromStorage)
+  const [todos, dispatch] = useReducer(todosReducer, initialState)
+  // const [todos, setTodos] = useState(todosParsed || [])
 
   const onAdd = text => setTodos([
     ...todos, {
