@@ -1,24 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import uuid from 'uuid/v4'
+
+import {Text} from './components/Text'
+import {ToDoInput} from './components/ToDoInput'
+import {ToDoItem} from './components/ToDoItem'
 
 function App() {
+  const [todos, setTodos] = useState([])
+
+  const onAdd = text => setTodos([
+    ...todos, {
+      _id: uuid(),
+      text,
+      completed: false
+    }
+  ])
+
+  const onSwitch = _id => setTodos(todos.map(todo => _id === todo._id ? 
+      {...todo, completed: !todo.completed} 
+      : todo
+  )); 
+
+  // const onRemove = _id => setTodos(
+  //     todos.filter(todo => _id !== todo.id),
+  //   )
+
+  const onRemove = _id => setTodos(todos.filter(todo => _id !== todo._id))
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Text size="40px">Smart ToDo App</Text>
+      <ToDoInput onAdd={onAdd} />
+      <div className="container">
+        {todos.map( todo => {return(
+          <ToDoItem 
+            key={todo._id}
+            {...{todo}}
+            onSwitch={onSwitch}
+            onRemove={onRemove}
+          />)
+        })}
+
+        {/* <ToDoItem 
+          todo={{ _id: 'text', text: 'Some todo', completed: false }}
+          onSwitch={onSwitch}
+        />   */}
+      </div>
+      {/* <div className="triangle" />
+      <div className="triangle leftside" /> */}
     </div>
   );
 }
