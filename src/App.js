@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import uuid from 'uuid/v4'
 
@@ -7,7 +7,9 @@ import {ToDoInput} from './components/ToDoInput'
 import {ToDoItem} from './components/ToDoItem'
 
 function App() {
-  const [todos, setTodos] = useState([])
+  const todosFromStorage = localStorage.getItem('todos')
+  const todosParsed = JSON.parse(todosFromStorage)
+  const [todos, setTodos] = useState(todosParsed || [])
 
   const onAdd = text => setTodos([
     ...todos, {
@@ -27,6 +29,11 @@ function App() {
   //   )
 
   const onRemove = _id => setTodos(todos.filter(todo => _id !== todo._id))
+
+  useEffect(() => {
+    const todosStringified = JSON.stringify(todos)
+    localStorage.setItem('todos', todosStringified)
+  }, [todos])
 
   return (
     <div className="App">
