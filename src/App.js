@@ -1,42 +1,22 @@
-import React, {useState, useEffect, useReducer} from 'react';
+import React from 'react';
 import './App.css';
-import uuid from 'uuid/v4'
+// import uuid from 'uuid/v4'
 
 import { Text } from './components/Text'
 import { ToDoInput } from './components/ToDoInput'
 import { ToDoItem } from './components/ToDoItem'
-import { todosReducer, initialState } from './helpers/todosReducer'
-
+// import { todosReducer, initialState, TODOS_ACTIONS } from './helpers/todosReducer'
+import { useTodosHook } from './helpers/useTodosHook'
 
 function App() {
-  // const todosFromStorage = localStorage.getItem('todos')
-  // const todosParsed = JSON.parse(todosFromStorage)
-  const [todos, dispatch] = useReducer(todosReducer, initialState)
-  // const [todos, setTodos] = useState(todosParsed || [])
-
-  const onAdd = text => setTodos([
-    ...todos, {
-      _id: uuid(),
-      text,
-      completed: false
-    }
-  ])
-
-  const onSwitch = _id => setTodos(todos.map(todo => _id === todo._id ? 
-      {...todo, completed: !todo.completed} 
-      : todo
-  )); 
-
-  // const onRemove = _id => setTodos(
-  //     todos.filter(todo => _id !== todo.id),
-  //   )
-
-  const onRemove = _id => setTodos(todos.filter(todo => _id !== todo._id))
-
-  useEffect(() => {
-    const todosStringified = JSON.stringify(todos)
-    localStorage.setItem('todos', todosStringified)
-  }, [todos])
+  
+  const {     
+    todos,
+    onAdd,
+    onSwitch,
+    onEdit,
+    onRemove
+  } = useTodosHook()
 
   return (
     <div className="App">
@@ -49,6 +29,7 @@ function App() {
             {...{todo}}
             onSwitch={onSwitch}
             onRemove={onRemove}
+            onEdit={onEdit}
           />)
         })}
 

@@ -3,7 +3,8 @@ import uuid from "uuid/v4";
 export const TODOS_ACTIONS = {
     ADD: 'add',
     COMPLETE: 'complete',
-    REMOVE: 'remove'
+    REMOVE: 'remove',
+    EDIT : 'edit'
 }
 
 export const initialState = () => {
@@ -14,22 +15,30 @@ export const initialState = () => {
 }
 
 export const todosReducer = (todos, action) => {
-    switch(action.type) {
+    const { type, _id, text, newTodo} = action;
+
+    switch(type) {
         case TODOS_ACTIONS.ADD:
             return [
                 ...todos, {
                     _id: uuid(),
-                    text: action.text,
+                    text,
                     completed: false
                   }
             ]
         case TODOS_ACTIONS.COMPLETE:
             return todos.map(
-                todo => action._id === todo._id ? 
+                todo => _id === todo._id ? 
                 {...todo, completed: !todo.completed} 
                 : todo,
             );
         case TODOS_ACTIONS.REMOVE:
-            return todos.filter(todo => _id !== todo._id)  
+            return todos.filter(todo => _id !== todo._id); 
+        case TODOS_ACTIONS.EDIT:
+            return todos.map(
+                todo => todo._id === newTodo._id ? newTodo : todo
+            );
+        default:
+            throw new Error();         
     }
 }
